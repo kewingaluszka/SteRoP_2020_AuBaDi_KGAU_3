@@ -349,10 +349,25 @@ Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską
 
 \subsection{Zasilanie}
 
+Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania uzyskiwane są z przetwornic DC-DC step down.
 
-Płytkę wyposażono w zasilacz układu DRV8825 -- sterownika silnika krokowego, ponadto umieszczono diody sygnalizujące obecność napięcia na linii 17V (zasilanie sterownika silnika krokowego) oraz 5V (zasilanie mikrokontrolera). Wykorzystano transformator z napięciem na uzwojeniu wtórym równym 12V.
+\begin{itemize}
+    \item Zasilane bezpośrednio z zasilacza
+    \subitem -- DRV8825 -- sterownik silnika krokowego
+    \subitem -- przetwornica DC-DC step-down 12V
+    \subitem -- przetwornica DC-DC step-down 5V
+    
+    \item Zasilane z przetwornicy 5V
+    \subitem -- płytka deweloperska STM32F411 DISCO
+    \subitem -- moduł przekaźników
+    \subitem -- wyświetlacz LCD
+    \subitem -- wzmacniacz PAM8403
+    
+    \item Zasilane z przetwornicy 12V
+    \subitem -- taśma LED RGB (tranzystory MOSFET)
+    
+\end{itemize}
 
-Napięcie 5V uzyskiwanie jest z portu USB. W razie przekroczenia wydajności prądowej portu USB, układ zostanie doposażony w przetwornicę DC-DC, która została umieszczona na schemacie.
 
 \subsection{Silnik krokowy}
 Silnik krokowy NEMA 17 połączony jest za pomocą taśmy zakończonej złączami goldpin do sterownika. Celem lepszej filtracji napięcia umieszczono kondensatory możliwie blisko układu DRV8825.
@@ -364,7 +379,7 @@ Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasi
 Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
 
 \subsection{Sterowanie podświetleniem}
-Jako elementy wykonawcze użyto tranzystory MOSFET z kanałem N.
+Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N.
 
 \includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{dionizos_eagleA32.pdf}
 
