@@ -388,15 +388,18 @@ Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
 %Obecne w dokumencie do etapu II oraz III
 \section{Opis działania programu}
 
-Program służy do testownia implementacji alogrytmu poruszania karetką. W związku z wczesną fazą powstawania programu parametry pozycji, do której ma przyjechać karetka, ustawiane są bezpośrednio w kodzie. Przy starcie programu silnik krokowy wykonuje tyle skoków by karetka znalazła się w skrajnej pozycji, co jest rejestrowane wówczas przez wyłącznik krańcowy. Stanowi to punkt odniesienia (pozycję 0), od którego odliczane są ilości skoków jakie ma wykonać silnik by ustawić karetkę na konkretną pozycje. 
+Zaimplementowano obsługę silnika krokowego oraz wyłącznika krańcowego.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.35\textwidth]{figures/diagram.png}
-	\caption{Diagram testowej aplikacji ruchu}
+	\includegraphics[width=0.35\textwidth]{algorytm2.png}
+	\caption{Diagram algorytmu sterowania silnikiem}
 	\label{fig:Diagram}
 \end{figure}
  \newpage
+ 
+Jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisków i menu, odtwarzanie muzyki, obsługa silnika i przekaźników pomp oraz generowanie przebiegu PWM. Dzięki zastosowanym mechanizmom flag i zmiennych ulotnych oraz użyciu liczników niniejsze elementy mogą wykonywać się w tej samej chwili.
+ 
 %Sekcję tą można podzielić na dodatkowe podsekcje w miarę potrzeb. 
 %Do tego celu nalezy wykorzystać \textit{subsection}.
 %
@@ -431,16 +434,14 @@ Program służy do testownia implementacji alogrytmu poruszania karetką. W zwi�
 
 Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Stworzono część mechaniczną i elektroniczną, która w razie potrzeb może zostać zmodyfikowana i dopasowana do rozwiązań, które nie zostały jeszcze użyte. Program obsługujący sterownik silnika krokowego z wykorzystaniem przerwań daje możliwość sterowania silnikiem i ustawienia rządanej pozycji, na której powinna znaleźć się karetka.
 
-W związku z problemami logistycznymi pompy oraz diody elektrolumiscencyjnye COB nie zostały zamówione. Nie wypływa to na proces realizacji projektu. Zostaną one zamontowane podczas realizacji etapu III. 
 
-Ostateczna konfiguracja mikrokonrolera zostanie przedstawiona w podsumowaniu etapu III. 
 \newline
 \newline
 Linki do repozytoriów na platformie Github
 \newline
 \href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_2}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_2 - Github]}
 \newline
-\href{https://github.com/kewingaluszka/STM32_AuBaDi}{[Projekt STM32CubeIDE -- Github]}
+\href{https://github.com/kewingaluszka/AuBaDi}{[Projekt STM32CubeIDE -- Github]}
 
 \newpage
 %\addcontentsline{toc}{section}{Bibilografia}
