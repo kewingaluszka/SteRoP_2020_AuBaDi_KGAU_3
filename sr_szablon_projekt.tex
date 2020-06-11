@@ -1,0 +1,568 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = pl_PL
+
+% $Id:$
+
+%Author: Wojciech Domski
+%Szablon do ząłożeń projektowych, raportu i dokumentacji z steorwników robotów
+%Wersja v.1.0.0
+%
+
+%% Konfiguracja:
+\newcommand{\kurs}{Sterowniki robot\'{o}w}
+\newcommand{\formakursu}{Projekt}
+
+%odkomentuj właściwy typ projektu, a pozostałe zostaw zakomentowane
+%\newcommand{\doctype}{Za\l{}o\.{z}enia projektowe} %etap I
+\newcommand{\doctype}{Raport} %etap II
+%\newcommand{\doctype}{Dokumentacja} %etap III
+
+%wpisz nazwę projektu
+\newcommand{\projectname}{Automatyczny barman Dionizos}
+
+%wpisz akronim projektu
+\newcommand{\acronim}{AuBaDi}
+
+%wpisz Imię i nazwisko oraz numer albumu
+\newcommand{\osobaA}{Kewin \textsc{Gałuszka}, 241624}
+\newcommand{\osobaB}{Adrian \textsc{Urban}, 241558}
+%w przypadku projektu jednoosobowego usuń zawartość nowej komendy
+
+
+%wpisz termin w formie, jak poniżej dzień, parzystość, godzina
+\newcommand{\termin}{ptTP11}
+
+%wpisz imię i nazwisko prowadzącego
+\newcommand{\prowadzacy}{dr in\.{z}. Wojciech \textsc{Domski}}
+
+\documentclass[10pt, a4paper]{article}
+\usepackage{float}
+\usepackage{polski}
+\usepackage{breakurl}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{lscape}
+\usepackage{pdfpages}
+\usepackage{url}
+
+\include{preambula}
+
+\begin{document}
+
+\def\tablename{Tabela}	%zmienienie nazwy tabel z Tablica na Tabela
+
+\begin{titlepage}
+	\begin{center}
+		\textsc{\LARGE \formakursu}\\[1cm]		
+		\textsc{\Large \kurs}\\[0.5cm]		
+		\rule{\textwidth}{0.08cm}\\[0.4cm]
+		{\huge \bfseries \doctype}\\[1cm]
+		{\huge \bfseries \projectname}\\[0.5cm]
+		{\huge \bfseries \acronim}\\[0.4cm]
+		\rule{\textwidth}{0.08cm}\\[1cm]
+		
+		\begin{flushright} \large
+		\emph{Skład grupy:}\\
+		\osobaA\\
+		\osobaB\\[0.4cm]
+		
+		\emph{Termin: }\termin\\[0.4cm]
+
+		\emph{Prowadzący:} \\
+		\prowadzacy \\
+		
+		\end{flushright}
+		
+		\vfill
+		
+		{\large \today}
+	\end{center}	
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+%Obecne we wszystkich dokumentach
+\section{Opis projektu}
+\label{sec:OpisProjektu}
+
+Celem projektu jest stworzenie automatycznego barmana -- urządzenia będącego w stanie mieszać płyny w ściśle zadanych proporcjach. Urządzenie wyposażone w wyświetlacz LCD oraz przyciski będzie oferować interfejs, który pozwoli użytkownikowi na wybranie konkretnego napoju. W zależności od decyzji użytkownika dotyczącej rodzaju napoju, urządzenie zmieni swoje podświetlenie wykonane za pomocą diod LED. Dodatkowo wykorzystany zostanie DAC do wygenerowania wcześniej zapisanego na pamięć dźwięku. Karetka, w której umieszczony zostanie zbiornik na płyn będzie przesuwana za pomocą silnika krokowego. Kolejne płyny będą pobierane z zasobników za pomocą indywidualnych pomp bądź zaworów.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/dionizos.png}
+	\caption{Schematyczny rysunek urządzenia}
+	\label{fig:Architektura}
+\end{figure}
+
+%Obecne we wszystkich dokumentach
+\section{Konfiguracja mikrokontrolera}
+ 
+Konfiguracja portów mikrokontrolera (rysunek 2) oraz zegarów (rysunek 3) przy użyciu prgoramu STM32CubeMX.
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{konfiguracja.PNG}
+	\caption{Konfiguracja wyjść mikrokontrolera w programie STM32CubeMX}
+	\label{fig:KonfiguracjaMikrokontrolera}
+\end{figure}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textheight,angle=90]{zegary.PNG}
+	\caption{Konfiguracja zegarów mikrokontrolera}
+	\label{fig:KonfiguracjaZegara}
+\end{figure}
+
+%Obecne we wszystkich dokumentach
+\subsection{Konfiguracja pinów}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		Numer pinu	&	PIN & Tryb pracy & Funkcja/etykieta\\
+		\hline
+8& PC14-OSC32{\_}IN& RCC{\_}OSC32{\_}IN& PC14-OSC32{\_}IN \\
+9& PC15-OSC32{\_}OUT& RCC{\_}OSC32{\_}OUT& PC15-OSC32{\_}OUT\\
+12& PH0 - OSC{\_}IN &RCC{\_}OSC{\_}IN& PH0-OSC{\_}IN\\
+13& PH1 - OSC{\_}OUT &RCC{\_}OSC{\_}OUT& PH1-OSC{\_}OUT\\
+23& PA0-WKUP &ADC1{\_}IN0& Laser{\_}receiver\\
+29& PA4& I2S3{\_}WS& I2S3{\_}WS [CS43L22{\_}LRCK]\\
+30& PA5& GPIO{\_}Input& Button{\_}1\\
+31& PA6& GPIO{\_}Input& Button{\_}2\\
+32& PA7& GPIO{\_}Input& Button{\_}3\\
+38& PE7& GPIO{\_}Output& LED{\_}R\\
+39& PE8& GPIO{\_}Output& LED{\_}G\\
+40& PE9& GPIO{\_}Output& LED{\_}B\\
+42& PE11& GPIO{\_}Output& Pump{\_}relay{\_}1\\
+43& PE12& GPIO{\_}Output& Pump{\_}relay{\_}2\\
+44& PE13& GPIO{\_}Output& Pump{\_}relay{\_}3\\
+45& PE14& GPIO{\_}Output& Pump{\_}relay{\_}4\\
+46& PE15& GPIO{\_}Output& Pump{\_}relay{\_}5\\
+47& PB10& I2C2{\_}SCL& I2C2{\_}SCL{\_}LCD\\
+58& PD11& GPIO{\_}EXTI11& endstop\\
+59& PD12& GPIO{\_}Output& LD4 [Green Led]\\
+60& PD13& GPIO{\_}Output& LD3 [Orange Led]\\
+61& PD14& GPIO{\_}Output& LD5 [Red Led]\\
+62& PD15& GPIO{\_}Output& LD6 [Blue Led]\\
+63& PC6& GPIO{\_}Output& dir [DRB8825]\\
+65& PC8& GPIO{\_}Output& step [DRV8825]\\
+67& PA8& GPIO{\_}Output& slp{\_}rst [DRV8825]\\
+68& PA9& USB{\_}OTG{\_}FS{\_}VBUS& VBUS{\_}FS\\
+70& PA11& USB{\_}OTG{\_}FS{\_}DM& OTG{\_}FS{\_}DM\\
+71& PA12& USB{\_}OTG{\_}FS{\_}DP& OTG{\_}FS{\_}DP\\
+78& PC10& I2S3{\_}CK I2S3{\_}SCK& [CS43L22{\_}SCLK]\\
+80& PC12& I2S3{\_}SD I2S3{\_}SD & [CS43L22{\_}SDIN]\\
+85& PD4& GPIO{\_}Output& Audio{\_}RST [CS43L22{\_}RESET]\\
+86& PD5& GPIO{\_}Input& OTG{\_}FS{\_}OverCurrent\\
+89& PB3& I2C2{\_}SDA& I2C2{\_}SDA{\_}LCD\\
+92& PB6& I2C1{\_}SCL& Audio{\_}SCL [CS43L22{\_}SCL]\\
+96& PB9& I2C1{\_}SDA& Audio{\_}SDA [CS43L22{\_}SDA]\\
+
+		\hline
+	\end{tabular}
+	\caption{Konfiguracja pinów mikrokontrolera}
+	
+\end{table}
+\begin{itemize}
+\item Piny PE11,PE12,PE13,PE14,PE15 - załączanie przekaźników pomp
+\item Piny PB6 i PB9 - komunikacja I2C z DAC Audio
+\item Piny PA4, PC7, PC10, PC12 - komunikacja I2S z DAC Audio
+\item Pin PD4 - Reset DAC Audio
+\item Piny PE7, PE8, PE9 - oświetlenie LED
+\item Piny PA5, PA6, PA7 - przyciski
+\item Piny PC6, PC8, PA8 - sterownik silnika krokowego A4988
+\item Piny PH0, PH1 - rezonator kwarcowy
+\item Pin PA0 - czujnik fotorezystorowy (czujnik zbiornika)
+\item Pin PD11 - wyłącznik krańcowy
+\item Piny PB10, PB3 - komunikacja I2C z wyświetlaczem LCD
+\item Piny PA9, PA11, PA12, PD5 - USB OTG (host)
+\end{itemize}
+
+
+
+%Obecne we wszystkich dokumentach
+\subsection{I2C1}
+
+Magistrala szeregowa I2C1 zostanie wykorzystana do komunikacji z układem CS43L22 -- DAC Audio
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{I2C Speed Mode}& Standard Mode \\  \hline
+		\textbf{I2C Clock Speed (Hz) } & 100000 \\
+		
+		\hline  \textbf{Primary Address Length selection}& 7-bit  \\\hline
+
+	\end{tabular}
+	\caption{Konfiguracja peryferium I2C1}
+	\label{tab:USART}
+\end{table}
+\subsection{I2C2}
+
+Magistrala szeregowa I2C2 zostanie wykorzystana do komunikacji z kontrolerem wyświetlacza HD44780 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{I2C Speed Mode}& Standard Mode \\  \hline
+		\textbf{I2C Clock Speed (Hz) } & 100000 \\
+		
+		\hline  \textbf{Primary Address Length selection}& 7-bit  \\\hline
+
+	\end{tabular}
+	\caption{Konfiguracja peryferium I2C2}
+	\label{tab:USART}
+\end{table}
+\subsection{I2S3}
+
+Magistrala szeregowa I2S3 zostanie wykorzystana do komunikacji z układem CS43L22 -- DAC Audio 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Transmission Mode}& Mode Master Transmit \\ 
+		\hline  \textbf{Communication Standard} & I2S Philips \\
+		\hline  \textbf{Data and Frame Format} & I2S 16 Bits Data on 16 Bits Frame \\
+		\hline  \textbf{Selected Audio Frequency} & \textcolor{blue}{48KHz }\\
+		\hline  \textbf{Real Audio Frequency} & \textcolor{blue}{48.076KHz} \\
+		\hline  \textbf{Error between Selected and Real} & \textcolor{blue}{0.15{\%}}
+		\\
+	\hline  \textbf{Clock Source} & I2S PLL Clock  \\
+	\hline  \textbf{Clock Polarity} & Low \\
+	\hline
+
+	\end{tabular}
+	\caption{Konfiguracja peryferium I2S3}
+	\label{tab:USART}
+\end{table}
+
+
+
+\subsection{USB OTG}
+
+USB OTG zostanie wykorzystane do podłączenia zewnętrznej pamięci flash
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+\hline  \textbf{Mode:} &Host{\_}Only\\
+\hline  \textbf{mode:} &Activate{\_}VBUS \\
+\hline  \textbf{Speed Host Full Speed} &12MBit/s\\
+\hline  \textbf{Signal start of frame} &Disabled\\
+ \hline 
+	\end{tabular}
+	\caption{Konfiguracja peryferium USB OTG}
+	\label{tab:USART}
+\end{table}
+\newpage
+\subsection{FATFS}
+ Obsługa systemu plików FAT
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+	\hline  \textbf{Function Parameters:}\\
+\hline  \textbf{FS{\_}READONLY (Read-only mode)} & Disabled \\
+\hline  \textbf{FS{\_}MINIMIZE (Minimization level)} &  Disabled\\
+\hline  \textbf{USE{\_}STRFUNC (String functions)} &  Enabled with LF -> CRLF conversion\\
+\hline  \textbf{USE{\_}FIND (Find functions) } & Disabled\\
+\hline  \textbf{USE{\_}MKFS (Make filesystem function)} &  Enabled\\
+\hline  \textbf{USE{\_}FASTSEEK (Fast seek function)} &  Enabled\\
+\hline  \textbf{USE{\_}EXPAND (Use f{\_}expand function) } & Disabled\\
+\hline  \textbf{USE{\_}CHMOD (Change attributes function)} &  Disabled\\
+\hline  \textbf{USE{\_}LABEL (Volume label functions)} &  Disabled\\
+\hline  \textbf{USE{\_}FORWARD (Forward function) } & Disabled\\
+\hline  \textbf{Locale and Namespace Parameters:}\\
+\hline  \textbf{CODE{\_}PAGE (Code page on target)} &  Latin 1\\
+\hline  \textbf{USE{\_}LFN (Use Long Filename)} &  Disabled\\
+\hline  \textbf{MAX{\_}LFN (Max Long Filename)} &  255\\
+\hline  \textbf{LFN{\_}UNICODE (Enable Unicode)} &  ANSI/OEM\\
+\hline  \textbf{STRF{\_}ENCODE (Character encoding) } & UTF-8\\
+\hline  \textbf{FS{\_}RPATH (Relative Path) } & Disabled\\
+\hline  \textbf{Physical Drive Parameters:}  \\
+\hline  \textbf{VOLUMES (Logical drives)} &  1\\
+\hline  \textbf{MAX{\_}SS (Maximum Sector Size)} &  512\\
+\hline  \textbf{MIN{\_}SS (Minimum Sector Size)} &  512\\
+\hline  \textbf{MULTI{\_}PARTITION (Volume partitions feature)} &  Disabled\\
+\hline  \textbf{USE{\_}TRIM (Erase feature)} &  Disabled\\
+\hline  \textbf{FS{\_}NOFSINFO (Force full FAT scan)} &  0\\
+\hline  \textbf{System Parameters:} \\
+\hline  \textbf{FS{\_}TINY (Tiny mode) } & Disabled\\
+\hline  \textbf{FS{\_}EXFAT (Support of exFAT file system)} &  Disabled\\
+\hline  \textbf{FS{\_}NORTC (Timestamp feature)} &  Dynamic timestamp\\
+\hline  \textbf{FS{\_}REENTRANT (Re-Entrancy)} &  Disabled\\
+\hline  \textbf{FS{\_}TIMEOUT (Timeout ticks) } & 1000\\
+\hline  \textbf{FS{\_}LOCK (Number of files opened simultaneously)} &  2\\
+
+	
+	\hline
+
+	\end{tabular}
+	\caption{Konfiguracja peryferium I2S3}
+	\label{tab:USART}
+\end{table}
+\newpage
+\subsection{ADC}
+
+ADC zostanie wykorzystany do odczytywania stanu z czujników optycznych
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+ \hline 
+
+\hline  \textbf{ADC{\_}Settings:}\\
+\hline  \textbf{Clock Prescaler} &PCLK2 divided by 8 *\\
+\hline  \textbf{Resolution }&12 bits (15 ADC Clock cycles)\\
+\hline  \textbf{Data Alignment} &Right alignment\\
+\hline  \textbf{Scan Conversion Mode}& Disabled\\
+\hline  \textbf{Continuous Conversion Mode} &Disabled\\
+\hline  \textbf{Discontinuous Conversion Mode}& Disabled\\
+\hline  \textbf{DMA Continuous Requests}& Disabled\\
+\hline  \textbf{End Of Conversion Selection}& EOC flag at the end of single channel conversion\\
+\hline  \textbf{ADC{\_}Regular{\_}ConversionMode:}\\
+\hline  \textbf{Number Of Conversion}& 1\\
+\hline  \textbf{External Trigger Conversion Source }&Regular Conversion launched by software\\
+\hline  \textbf{External Trigger Conversion Edge}& None\\
+\hline  \textbf{Rank} &1\\
+\hline  \textbf{Channel }Channel &0\\
+\hline  \textbf{Sampling Time} &28 Cycles *\\
+ \hline 
+	\end{tabular}
+	\caption{Konfiguracja peryferium ADC}
+	\label{tab:USART}
+\end{table}
+
+\subsection{TIM4}
+Timer 4 wykorzystywany jest do sterowania silnikiem krokowym poprzez sterownik. Częstotliwość ustawiono na 1\emph{kHz}. Obsługa przerwań tego timera zmienia stan logiczny wejścia sterownika silnika krokowego o naziwe STEP. Sterownik ten reaguje na zbocze narastające. Co każdą zmianę stanu dekrementujemy wartość step o jaką ma poruszyć się silnik. Konfiguracje peryferium przedstawiono w tabeli 8.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Prescaler(PSC - 16 bits value) }& \textcolor{blue}{99} \\ 
+		\hline  \textbf{Counter Period (AutoReload Register --- 16 bits value )} & Up \\
+		\hline  \textbf{Counter Period} & \textcolor{blue}{159} \\
+		\hline  \textbf{Internal Clock Division (CKD) } & No Division\\
+		\hline  \textbf{auto-reload preload} & Disable\\
+		\hline  \textbf{Master/Slave Mode (MSM bit) } & Disable (Trigger input effect not delayed)
+		\\
+	\hline  \textbf{Trigger Event Selection} & Reset (UG bit from TIMx\_EGR)  \\
+	\hline
+
+	\end{tabular}
+	\caption{Konfiguracja TIM4}
+	\label{tab:TIM4}
+\end{table}
+
+
+%Obecne w dokumencie do etapu II oraz III
+\section{Urządzenia zewnętrzne}
+
+
+%Obecne w dokumencie do etapu II oraz III
+\subsection{Obsługa silnika krokowego}
+\subsubsection{Sterownik silnika krokowego DRV8825}
+Układ został wykorzystany do poruszania silnikiem krokowym. Moduł posiada wejścia
+\begin{itemize}
+    \item \emph{dir} -- zmiana stanu na tym wejściu powoduje zmianę kierunku obracania się silnika
+    \item \emph{step} -- pojawienie się zbocza narastającego na tym wejściu skutkuje obrotem silnika o jeden krok
+    \item \emph{sleep} oraz \emph{reset} -- wejścia odpowiadające za pracę układu i wybudzanie go ze stanu uśpienia. Aby układ pracował, na obu wejściach powinien pojawić się stan wysoki.
+\end{itemize}
+\subsubsection{Silnik krokowy}
+Silnik krokowy sterowany jest za pomocą układu DRV8825 prądem ~0.7A na cewkę przy napięciu 17V. Jeden pełny obrót silnika to 200 kroków. 
+
+\subsubsection{Wyłącznik krańcowy}
+Wyłącznik krańcowy podłączony jest do pinu PD11, który jest skonfigurowany jako GPIO{\_}EXTI11. Reakcja występuje na zbocze narastające, pin jest ustawiony jako \emph{Pull down}. 
+
+
+
+%Obecne w dokumencie do etapu II oraz III
+%Obecne w dokumencie do etapu II oraz III
+\section{Projekt elektroniki}
+
+
+Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską STM32F411VET6 umieszczono na listwach goldpin celem uproszczenia procesu montażu i stworzenia możliwości użycia jej ponownie do innych projektów. 
+
+\subsection{Zasilanie}
+
+
+Płytkę wyposażono w zasilacz układu DRV8825 -- sterownika silnika krokowego, ponadto umieszczono diody sygnalizujące obecność napięcia na linii 17V (zasilanie sterownika silnika krokowego) oraz 5V (zasilanie mikrokontrolera). Wykorzystano transformator z napięciem na uzwojeniu wtórym równym 12V.
+
+Napięcie 5V uzyskiwanie jest z portu USB. W razie przekroczenia wydajności prądowej portu USB, układ zostanie doposażony w przetwornicę DC-DC, która została umieszczona na schemacie.
+
+\subsection{Silnik krokowy}
+Silnik krokowy NEMA 17 połączony jest za pomocą taśmy zakończonej złączami goldpin do sterownika. Celem lepszej filtracji napięcia umieszczono kondensatory możliwie blisko układu DRV8825.
+
+\subsection{Sekcja przekaźników}
+Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasilany jest napięciem 5V z przetwornicy. Zastosowana izolacja galwaniczna zabezpiecza mikrokontroler przed nieporządanymi pikami napięcia podczas rozłączania cewek, dodatkowo powoduje zmniejszenie prądu pobieranego z pinów mikrokontrolera.
+
+\subsection{Wyświetlacz LCD oraz konwerter I2C}
+Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
+
+\subsection{Sterowanie podświetleniem}
+Jako elementy wykonawcze użyto tranzystory MOSFET z kanałem N.
+
+\includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{dionizos_eagleA32.pdf}
+
+%Obecne w dokumencie do etapu II oraz III
+\section{Konstrukcja mechaniczna}
+
+\subsection{Podstawa}
+Jako podstawę do stworzenia urządzenia wykorzystano część mechaniki z drukarki HP C1440. Usunięto zbędne elementy wyposażenia, pozostawiono między innymi wałek, karetkę i część elementów konstrukcyjnych.
+
+
+\subsection{Konserwacja}
+Z uwagi na zużycie paska klinowego dokonano jego wymiany na nowy. Wyczyszczono wszystkie elementy ruchome urządzenia oraz użyto oleju do maszyn celem zmiejszenia oporów ruchu karetki po wałku. Dokonano również korekcji napięcia paska klinowego. 
+
+\subsection{Zmiany w konstrukcji}
+W drukarce do poruszania karetką wykorzystany był silnik prądu stałego, który został wymieniony na silnik krokowy. Z uwagi na różnicę w średnicach osi obu silników dokonano rozwiercenia zębatki, którą umieszczono na wale silnika krokowego. Do konstrukcji przykręcony został wyłącznik krańcowy.
+Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
+
+
+
+
+%Obecne w dokumencie do etapu II oraz III
+\section{Opis działania programu}
+
+Program służy do testownia implementacji alogrytmu poruszania karetką. W związku z wczesną fazą powstawania programu parametry pozycji, do której ma przyjechać karetka, ustawiane są bezpośrednio w kodzie. Przy starcie programu silnik krokowy wykonuje tyle skoków by karetka znalazła się w skrajnej pozycji, co jest rejestrowane wówczas przez wyłącznik krańcowy. Stanowi to punkt odniesienia (pozycję 0), od którego odliczane są ilości skoków jakie ma wykonać silnik by ustawić karetkę na konkretną pozycje. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\textwidth]{figures/diagram.png}
+	\caption{Diagram testowej aplikacji ruchu}
+	\label{fig:Diagram}
+\end{figure}
+ \newpage
+%Sekcję tą można podzielić na dodatkowe podsekcje w miarę potrzeb. 
+%Do tego celu nalezy wykorzystać \textit{subsection}.
+%
+%W przypadku, dodania istotnego fragmentu kodu należy posłużyć się środowiskiem 
+%lstlisting:
+%
+%\begin{lstlisting}[tabsize=2]
+%int foo(void){
+%return 2;
+%}
+%\end{lstlisting}
+%
+%Przykładowy wzór (\ref{eq:Wzor}):
+%\begin{equation}
+%\label{eq:Wzor}
+%\Theta = \int_t^{t+dt} \omega \, dt.	
+%\end{equation}
+%
+%Przykładowa pozycja bibliograficzna \cite{SR01} znajduje się 
+%w pliku bibliografia.bib.
+
+% %Obecne w dokumencie do etapu II oraz III (jeśli coś zostało niezrealizowane)
+% \section{Zadania niezrealizowane}
+
+% Jeśli wszystkie zadania zostały realizowane to wówczas 
+% ta sekcja powinna być usunięta w całości. W przeciwnym razie
+% należy zawrzeć tutaj, jakie zadania zostały nie zrealizowane 
+% oraz jaka była tego przyczyna.
+
+%Obecne we wszystkich dokumentach
+\section{Podsumowanie}
+
+Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Stworzono część mechaniczną i elektroniczną, która w razie potrzeb może zostać zmodyfikowana i dopasowana do rozwiązań, które nie zostały jeszcze użyte. Program obsługujący sterownik silnika krokowego z wykorzystaniem przerwań daje możliwość sterowania silnikiem i ustawienia rządanej pozycji, na której powinna znaleźć się karetka.
+
+W związku z problemami logistycznymi pompy oraz diody elektrolumiscencyjnye COB nie zostały zamówione. Nie wypływa to na proces realizacji projektu. Zostaną one zamontowane podczas realizacji etapu III. 
+
+Ostateczna konfiguracja mikrokonrolera zostanie przedstawiona w podsumowaniu etapu III. 
+\newline
+\newline
+Linki do repozytoriów na platformie Github
+\newline
+\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_2}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_2 - Github]}
+\newline
+\href{https://github.com/kewingaluszka/STM32_AuBaDi}{[Projekt STM32CubeIDE -- Github]}
+
+\newpage
+%\addcontentsline{toc}{section}{Bibilografia}
+%\bibliography{bibliografia}
+%\bibliographystyle{plabbrv}
+\begin{thebibliography}{9}
+
+\bibitem{stm}
+    A. Kurczyk, \emph{Mikrokontrolery STM32 dla początkujących.}, Wydawnictwo Btc, Legionowo 2019
+\bibitem{XD}
+    A. France, \emph{Świat druku 3D. Przewodnik}, Wydawnictwo Helion, Gliwice 2014
+\bibitem{polulu}
+    Nota katalogowa A4988, \url{https://botland.com.pl/pl/index.php?controller=attachment&id_attachment=87}, 2009
+\bibitem{LCD}
+    Nota katalogowa PCF8574, \url{https://botland.com.pl/index.php?controller=attachment&id_attachment=210}, 1997
+\bibitem{USB otg}
+    Bartek, \emph{Kurs STM32 F4 – 11 – Komunikacja przez USB}, 9 sierpień 2016. Dostępne w Forbot: \url{https://forbot.pl/blog/kurs-stm32-f4-11-komunikacja-przez-usb-id13477}
+\bibitem{USB flash}
+    Wojtek, \emph{12 STM32F4 - CubeMx - USB podłączenie pendriva}, 26 luty 2017. Dostępne w Elektornika i Programowanie \url{https://elektronika327.blogspot.com/2017/02/12-stm32f4-cubemx-usb-podaczenie.html}
+\bibitem{DAC}
+    Nota aplikacyjna \emph{Audio and waveform generation using the DAC}, \url{https://www.st.com/resource/en/application_note/cd00259245-audio-and-waveform-generation-using-the-dac-in-stm32-microcontrollers-stmicroelectronics.pdf}, 2017
+%\bibitem{Silnik skokowy Mineba 17PM}
+%Silnik skokowy Mineba 17PM
+%\url{http://cnc25.free.fr/documentation/moteurs}
+%    Nota katalogowa Mineba 17PM-K, \url{https://www.eminebea.com/en/product/rotary/steppingmotor/hybrid/standard/__icsFiles/afieldfile/2017/09/29/17pm-k_1.pdf}
+\bibitem{Audio playback and recording using the STM32F4DISCOVERY}
+    Nota aplikacyjna \emph{Audio playback and recording},
+    \url{https://www.st.com/resource/en/application_note/dm00040802-audio-playback-and-recording-using-the-stm32f4discovery-stmicroelectronics.pdf}, 2011
+\bibitem{8 Channel 5V Optical Isolated Relay Module}
+    Instrukcja obsługi modułu przekaźników, \url{http://www.handsontec.com/dataspecs/module/8Ch-relay.pdf}
+\end{thebibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
