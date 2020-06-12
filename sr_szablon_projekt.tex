@@ -347,6 +347,13 @@ Wyłącznik krańcowy podłączony jest do pinu PD11, który jest skonfigurowany
 
 Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską STM32F411VET6 umieszczono na listwach goldpin celem uproszczenia procesu montażu i stworzenia możliwości użycia jej ponownie do innych projektów. 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{sterownik.jpg}
+	\caption{Sterownik umieszczony z tyłu urządzenia}
+	\label{fig:Sterownik}
+\end{figure}
+\newpage
 \subsection{Zasilanie}
 
 Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania uzyskiwane są z przetwornic DC-DC step down.
@@ -378,17 +385,30 @@ Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasi
 \subsection{Wyświetlacz LCD oraz konwerter I2C}
 Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
 
-\subsection{Sterowanie podświetleniem}
-Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N.
+\subsection{Sekcja audio}
+Celem wzmocnienia sygnału audio z układu DAC użyto modułu ze wzmacniaczem PAM8403 pracującym w klasie D. Użyto głośników o impedancji 4 omów o mocy 3W.
+
+\subsection{Podświetlenie}
+Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{led.jpg}
+	\caption{Taśma LED przyklejona do profilu}
+	\label{fig:LED}
+\end{figure}
 
 \includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{dionizos_eagleA32.pdf}
+
 
 %Obecne w dokumencie do etapu II oraz III
 \section{Konstrukcja mechaniczna}
 
-\subsection{Podstawa}
-Jako podstawę do stworzenia urządzenia wykorzystano część mechaniki z drukarki HP C1440. Usunięto zbędne elementy wyposażenia, pozostawiono między innymi wałek, karetkę i część elementów konstrukcyjnych.
+\subsection{Konstrukcja}
+Jako podstawę do stworzenia urządzenia wykorzystano część mechaniki z drukarki HP C1440. Usunięto zbędne elementy wyposażenia, pozostawiono między innymi wałek, karetkę, Celem poprawienia estetyki projektu zmodyfikowano część podstawy przez montaż profili alumuniowych. W górnej części barmana umieszczona została aluminiowa listwa, pod którą przyklejona została taśma LED. Na niej w przyszłości również zostaną zamontowane wężyki prowadzące z pomp. 
+Na jednym z profili umieszczono wyświetlacz LCD oraz przyciski sterujące. Na jego przedłużeniu znajduje się również sterownik całego urządzenia.
 
+Jako podstawę użyto płyty laminowanej, którą wyposażono w gumowe nóżki. 
 
 \subsection{Konserwacja}
 Z uwagi na zużycie paska klinowego dokonano jego wymiany na nowy. Wyczyszczono wszystkie elementy ruchome urządzenia oraz użyto oleju do maszyn celem zmiejszenia oporów ruchu karetki po wałku. Dokonano również korekcji napięcia paska klinowego. 
@@ -396,6 +416,7 @@ Z uwagi na zużycie paska klinowego dokonano jego wymiany na nowy. Wyczyszczono 
 \subsection{Zmiany w konstrukcji}
 W drukarce do poruszania karetką wykorzystany był silnik prądu stałego, który został wymieniony na silnik krokowy. Z uwagi na różnicę w średnicach osi obu silników dokonano rozwiercenia zębatki, którą umieszczono na wale silnika krokowego. Do konstrukcji przykręcony został wyłącznik krańcowy.
 Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
+
 
 
 
