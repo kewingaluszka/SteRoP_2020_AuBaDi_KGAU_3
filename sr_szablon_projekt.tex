@@ -447,7 +447,7 @@ Zaimplementowano obsługę silnika krokowego oraz wyłącznika krańcowego.
 	\caption{Diagram algorytmu sterowania silnikiem}
 	\label{fig:Diagram}
 \end{figure}
- \newpage
+
  
 Jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisków i menu, odtwarzanie muzyki, obsługa silnika i przekaźników pomp oraz generowanie przebiegu PWM. Dzięki zastosowanym mechanizmom flag i zmiennych ulotnych oraz użyciu liczników niniejsze elementy mogą wykonywać się w tej samej chwili.
  
@@ -483,16 +483,27 @@ Jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisk
 %Obecne we wszystkich dokumentach
 \section{Podsumowanie}
 
-Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Stworzono część mechaniczną i elektroniczną, która w razie potrzeb może zostać zmodyfikowana i dopasowana do rozwiązań, które nie zostały jeszcze użyte. Program obsługujący sterownik silnika krokowego z wykorzystaniem przerwań daje możliwość sterowania silnikiem i ustawienia rządanej pozycji, na której powinna znaleźć się karetka.
+Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Uzupełełniono program o pozostałe funkcjonalności.
+Projekt został wykonany zgodnie z założeniami. Wprowadzono drobne zmiany, które poprawiły komfort korzystania z urządzenia. 
+Z powodu napotkanych problemów logistycznych spowodowanych aktualną sytuacją, zakup pomp do pompowania płynów zakończył się niepowodzeniem. Mimo to, zaimplementowano ich obsługę, wizualizacja działania jest widoczna na diodach LED zamontowanych na module przekaźników.
 
 
+\newpage
 \newline
 \newline
-Linki do repozytoriów na platformie Github
+Linki do repozytoriów na platformie Github 2 etap:
 \newline
 \href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_2}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_2 - Github]}
 \newline
+\href{https://github.com/kewingaluszka/STM32_AuBaDi}{[Projekt STM32CubeIDE -- Github]}
+
+Linki do repozytoriów na platformie Github 3 etap:
+\newline
+\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_3}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_3 - Github]}
+\newline
 \href{https://github.com/kewingaluszka/AuBaDi}{[Projekt STM32CubeIDE -- Github]}
+\newline
+\href{www.youtube.com/watch?v=tgUb9r82Xmk}{[]Prezentacja - film]}
 
 \newpage
 %\addcontentsline{toc}{section}{Bibilografia}
