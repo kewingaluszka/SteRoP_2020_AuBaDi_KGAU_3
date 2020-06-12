@@ -315,7 +315,7 @@ USB OTG zostanie wykorzystane do podłączenia zewnętrznej pamięci flash
 	\caption{Konfiguracja peryferium I2S3}
 	\label{tab:USART}
 \end{table}
-\newpage
+
 
 \subsection{TIM3}
 Timer 3 wykorzystany został do obsługi modułu przekaźników pomp. Częstotliwość generowania przerwania to ok. 1\emph{kHz}
@@ -361,6 +361,45 @@ Timer 4 wykorzystywany jest do sterowania silnikiem krokowym poprzez sterownik. 
     \end{tabular}
     \caption{Konfiguracja TIM4}
     \label{tab:TIM4}
+\end{table}
+
+\subsection{TIM5}
+Timer 5 został wykorzystany do generowania PWM celem sterowania paskiem LED. Częstotliwość generowanego sygnału to ok. 146 \emph{Hz}.
+ 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|} \hline
+        \textbf{Parametr} & Wartość \\
+        \hline
+        \hline  \textbf{Prescaler(PSC - 16 bits value) }& \textcolor{blue}{700} \\
+        \hline  \textbf{Counter Period (AutoReload Register --- 16 bits value )} & Up \\
+        \hline  \textbf{Counter Period} & \textcolor{blue}{700} \\
+        \hline  \textbf{Internal Clock Division (CKD) } & No Division\\
+        \hline  \textbf{auto-reload preload} & Disable\\
+        \hline  \textbf{Master/Slave Mode (MSM bit) } & Disable (Trigger input effect not delayed)
+        \\
+    \hline  \textbf{Trigger Event Selection} & Reset (UG bit from TIMx\_EGR)  \\
+    \hline
+ 
+    \end{tabular}
+    \caption{Konfiguracja TIM5}
+    \label{tab:TIM5}
+\end{table}
+ 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|} \hline
+    \textbf{Parametr} & Wartość \\
+    \hline
+    \hline  \textbf{Mode} & PWM mode 1 \\
+    \hline  \textbf{Pulse(32 bits value)} & 0 \\
+    \hline  \textbf{Output compare preload} & Enable \\
+    \hline  \textbf{Fast mode} & Disable \\
+    \hline  \textbf{CH Polarity} & High \\
+    \hline
+    \end{tabular}
+    \caption{Konfiguracja TIM5 - kanały 1, 2 i 3}
+    \label{tab:CHANNELS}
 \end{table}
 % tutaj adrian uzupełnij timery 
 
