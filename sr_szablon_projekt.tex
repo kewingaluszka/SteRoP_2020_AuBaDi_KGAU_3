@@ -317,6 +317,28 @@ USB OTG zostanie wykorzystane do podłączenia zewnętrznej pamięci flash
 \end{table}
 \newpage
 
+\subsection{TIM3}
+Timer 3 wykorzystany został do obsługi modułu przekaźników pomp. Częstotliwość generowania przerwania to ok. 1\emph{kHz}
+ 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|} \hline
+        \textbf{Parametr} & Wartość \\
+        \hline
+        \hline  \textbf{Prescaler(PSC - 16 bits value) }& \textcolor{blue}{238} \\
+        \hline  \textbf{Counter Period (AutoReload Register --- 16 bits value )} & Up \\
+        \hline  \textbf{Counter Period} & \textcolor{blue}{300} \\
+        \hline  \textbf{Internal Clock Division (CKD) } & No Division\\
+        \hline  \textbf{auto-reload preload} & Disable\\
+        \hline  \textbf{Master/Slave Mode (MSM bit) } & Disable (Trigger input effect not delayed)
+        \\
+    \hline  \textbf{Trigger Event Selection} & Reset (UG bit from TIMx\_EGR)  \\
+    \hline
+ 
+    \end{tabular}
+    \caption{Konfiguracja TIM3}
+    \label{tab:TIM3}
+\end{table}
 % tutaj adrian uzupełnij timery 
 
 %Obecne w dokumencie do etapu II oraz III
