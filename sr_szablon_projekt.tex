@@ -401,7 +401,30 @@ Timer 5 został wykorzystany do generowania PWM celem sterowania paskiem LED. Cz
     \caption{Konfiguracja TIM5 - kanały 1, 2 i 3}
     \label{tab:CHANNELS}
 \end{table}
-% tutaj adrian uzupełnij timery 
+\newpage
+\subsection{TIM10}
+Timer 10 został wykorzystany do inkrementowania zmiennej \emph{duty}, która odpowiada za wypełnienie generowanego sygnału PWM na timerze 5. Zmienna inkrementowana jest ok. 100 razy na sekundę.
+ 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|} \hline
+        \textbf{Parametr} & Wartość \\
+        \hline
+        \hline  \textbf{Prescaler(PSC - 16 bits value) }& \textcolor{blue}{850} \\
+        \hline  \textbf{Counter Period (AutoReload Register --- 16 bits value )} & Up \\
+        \hline  \textbf{Counter Period} & \textcolor{blue}{850} \\
+        \hline  \textbf{Internal Clock Division (CKD) } & No Division\\
+        \hline  \textbf{auto-reload preload} & Disable\\
+        \hline  \textbf{Master/Slave Mode (MSM bit) } & Disable (Trigger input effect not delayed)
+        \\
+    \hline  \textbf{Trigger Event Selection} & Reset (UG bit from TIMx\_EGR)  \\
+    \hline
+ 
+    \end{tabular}
+    \caption{Konfiguracja TIM10}
+    \label{tab:TIM10}
+\end{table}
+
 
 %Obecne w dokumencie do etapu II oraz III
 \section{Urządzenia zewnętrzne}
@@ -423,7 +446,7 @@ Silnik krokowy sterowany jest za pomocą układu DRV8825 prądem ~0.7A na cewkę
 Wyłącznik krańcowy podłączony jest do pinu PD11, który jest skonfigurowany jako GPIO{\_}EXTI11. Reakcja występuje na zbocze narastające, pin jest ustawiony jako \emph{Pull down}. 
 
 
-
+\newpage
 %Obecne w dokumencie do etapu II oraz III
 %Obecne w dokumencie do etapu II oraz III
 \section{Projekt elektroniki}
@@ -437,7 +460,6 @@ Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską
 	\caption{Sterownik umieszczony z tyłu urządzenia}
 	\label{fig:Sterownik}
 \end{figure}
-\newpage
 \subsection{Zasilanie}
 
 Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania uzyskiwane są z przetwornic DC-DC step down.
@@ -480,7 +502,7 @@ Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -
 \end{figure}
 
 
-
+\newpage
 \subsection{Podświetlenie}
 Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
 
