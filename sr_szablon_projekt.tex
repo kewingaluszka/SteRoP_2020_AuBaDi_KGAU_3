@@ -339,6 +339,29 @@ Timer 3 wykorzystany został do obsługi modułu przekaźników pomp. Częstotli
     \caption{Konfiguracja TIM3}
     \label{tab:TIM3}
 \end{table}
+
+\subsection{TIM4}
+Timer 4 wykorzystywany jest do sterowania silnikiem krokowym poprzez sterownik. Częstotliwość ustawiono na ok 420\emph{Hz}. Obsługa przerwań tego timera zmienia stan logiczny wejścia sterownika silnika krokowego o nazwie \emph{step}. Sterownik ten reaguje na zbocze narastające. Co każdą zmianę stanu dekrementujemy wartość step o jaką ma poruszyć się silnik. Konfiguracje peryferium przedstawiono w tabeli 8.
+ 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|} \hline
+        \textbf{Parametr} & Wartość \\
+        \hline
+        \hline  \textbf{Prescaler(PSC - 16 bits value) }& \textcolor{blue}{200} \\
+        \hline  \textbf{Counter Period (AutoReload Register --- 16 bits value )} & Up \\
+        \hline  \textbf{Counter Period} & \textcolor{blue}{850} \\
+        \hline  \textbf{Internal Clock Division (CKD) } & No Division\\
+        \hline  \textbf{auto-reload preload} & Disable\\
+        \hline  \textbf{Master/Slave Mode (MSM bit) } & Disable (Trigger input effect not delayed)
+        \\
+    \hline  \textbf{Trigger Event Selection} & Reset (UG bit from TIMx\_EGR)  \\
+    \hline
+ 
+    \end{tabular}
+    \caption{Konfiguracja TIM4}
+    \label{tab:TIM4}
+\end{table}
 % tutaj adrian uzupełnij timery 
 
 %Obecne w dokumencie do etapu II oraz III
