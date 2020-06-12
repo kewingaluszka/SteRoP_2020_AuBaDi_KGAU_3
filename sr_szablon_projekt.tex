@@ -398,7 +398,7 @@ Timer 5 został wykorzystany do generowania PWM celem sterowania paskiem LED. Cz
     \hline  \textbf{CH Polarity} & High \\
     \hline
     \end{tabular}
-    \caption{Konfiguracja TIM5 - kanały 1, 2 i 3}
+    \caption{Konfiguracja TIM5 - kanały 2, 3 i 4}
     \label{tab:CHANNELS}
 \end{table}
 \newpage
@@ -442,10 +442,41 @@ Układ został wykorzystany do poruszania silnikiem krokowym. Moduł posiada wej
 \subsubsection{Silnik krokowy}
 Silnik krokowy sterowany jest za pomocą układu DRV8825 prądem ~0.7A na cewkę przy napięciu 17V. Jeden pełny obrót silnika to 200 kroków. 
 
-\subsubsection{Wyłącznik krańcowy}
+\subsection{Wyłącznik krańcowy i przyciski MENU}
 Wyłącznik krańcowy podłączony jest do pinu PD11, który jest skonfigurowany jako GPIO{\_}EXTI11. Reakcja występuje na zbocze narastające, pin jest ustawiony jako \emph{Pull down}. 
+Analogicznie podłączono i skonfigurowano piny odpowiadające za obsługę przycisków MENU.
 
+\subsection{Moduł przekaźników}
+Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasilany jest napięciem 5V z przetwornicy. Zastosowana izolacja galwaniczna zabezpiecza mikrokontroler przed niepożądanymi pikami napięcia podczas rozłączania cewek, dodatkowo powoduje zmniejszenie prądu pobieranego z pinów mikrokontrolera.
 
+\subsection{Odtwarzanie dźwięku}
+\subsubsection{DAC Audio CS43L22}
+Do odtwarzania dźwięku został wykorzystany układ dostępny na płytce deweloperskiej STM32F411 DISCO -- DAC Audio CS43L22. Połączony jest on z mikrokonktrolerem magistralami I2C oraz I2S.
+
+\subsubsection{Wzmacniacz audio PAM8403 i przetworniki elektroakustyczne}
+Celem wzmocnienia sygnału audio z układu DAC użyto modułu ze wzmacniaczem PAM8403 pracującym w klasie D. Użyto dwóch głośników o impedancji 4 omów o mocy 3W.
+
+\newpage
+
+\subsection{Wyświetlacz LCD oraz konwerter I2C}
+Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{lcd.jpg}
+	\caption{Wyświetlacz LCD oraz przyciski sterujące}
+	\label{fig:LCD}
+\end{figure}
+
+\subsection{Podświetlenie}
+Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{led.jpg}
+	\caption{Taśma LED przyklejona do profilu}
+	\label{fig:LED}
+\end{figure}
 \newpage
 %Obecne w dokumencie do etapu II oraz III
 %Obecne w dokumencie do etapu II oraz III
@@ -453,6 +484,15 @@ Wyłącznik krańcowy podłączony jest do pinu PD11, który jest skonfigurowany
 
 
 Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską STM32F411VET6 umieszczono na listwach goldpin celem uproszczenia procesu montażu i stworzenia możliwości użycia jej ponownie do innych projektów. 
+Część sprzętowa została podzielona na trzy moduły
+\begin{itemize}
+    \item  Moduł główny stanowi płytka zawierająca sekcję zasilającą, część odpowiadającą za sterowanie silnikiem krokowym oraz sterownik oświetlenia LED RGB. 
+    
+    \item Sekcja GUI tworzona jest przez moduł wyświetlacza LCD, konwertera I2C oraz przycisków.
+    
+    \item Moduł przekaźników stanowi oddzielny element konstrukcji
+\end{itemize}
+
 
 \begin{figure}[H]
 	\centering
@@ -460,7 +500,6 @@ Część elektroniczną wykonano na płytce uniwersalnej. Płytkę deweloperską
 	\caption{Sterownik umieszczony z tyłu urządzenia}
 	\label{fig:Sterownik}
 \end{figure}
-\subsection{Zasilanie}
 
 Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania uzyskiwane są z przetwornic DC-DC step down.
 
@@ -475,43 +514,17 @@ Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu
     \subitem -- moduł przekaźników
     \subitem -- wyświetlacz LCD
     \subitem -- wzmacniacz PAM8403
+    \subitem -- część modułu konwertera stanów logicznych
     
     \item Zasilane z przetwornicy 12V
     \subitem -- taśma LED RGB (tranzystory MOSFET)
     
+    \item Zasilane ze stabilizatora 3V
+    \subitem -- przyciski MENU oraz wyłącznik krańcowy
+    \subitem -- część modułu konwertera stanów logicznych
 \end{itemize}
 
 
-\subsection{Silnik krokowy}
-Silnik krokowy NEMA 17 połączony jest za pomocą taśmy zakończonej złączami goldpin do sterownika. Celem lepszej filtracji napięcia umieszczono kondensatory możliwie blisko układu DRV8825.
-
-\subsection{Sekcja przekaźników}
-Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasilany jest napięciem 5V z przetwornicy. Zastosowana izolacja galwaniczna zabezpiecza mikrokontroler przed nieporządanymi pikami napięcia podczas rozłączania cewek, dodatkowo powoduje zmniejszenie prądu pobieranego z pinów mikrokontrolera.
-
-\subsection{Sekcja audio}
-Celem wzmocnienia sygnału audio z układu DAC użyto modułu ze wzmacniaczem PAM8403 pracującym w klasie D. Użyto dwóch głośników o impedancji 4 omów o mocy 3W.
-
-\subsection{Wyświetlacz LCD oraz konwerter I2C}
-Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\textwidth]{lcd.jpg}
-	\caption{Wyświetlacz LCD oraz przyciski sterujące}
-	\label{fig:LCD}
-\end{figure}
-
-
-\newpage
-\subsection{Podświetlenie}
-Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\textwidth]{led.jpg}
-	\caption{Taśma LED przyklejona do profilu}
-	\label{fig:LED}
-\end{figure}
 
 \includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{ajubadi2schemat.pdf}
 
@@ -535,7 +548,7 @@ Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{sterownik.jpg}
+	\includegraphics[width=0.7\textwidth]{barman.jpg}
 	\caption{Wygląd całego urządzenia}
 	\label{fig:Barman}
 \end{figure}
