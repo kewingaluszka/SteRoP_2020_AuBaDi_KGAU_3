@@ -568,7 +568,17 @@ Zaimplementowano obsługę silnika krokowego oraz wyłącznika krańcowego.
 \end{figure}
 
  
-Jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisków i menu, odtwarzanie muzyki, obsługa silnika i przekaźników pomp oraz generowanie przebiegu PWM. Dzięki zastosowanym mechanizmom flag i zmiennych ulotnych oraz użyciu liczników niniejsze elementy mogą wykonywać się w tej samej chwili.
+Dzięki zastosowanym mechanizmom flag i zmiennych ulotnych oraz użyciu liczników jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisków i menu, odtwarzanie muzyki, obsługa silnika i przekaźników pomp oraz generowanie przebiegu PWM. 
+\newline
+Na początku programu zainicjalizowane są wszystkie peryferia, następuje proces kalibracji karetki, która po dojechaniu do wyłącznika krańcowego zostaje zatrzymana. Podczas kalibracji wyświetlana jest stosowna informacja na wyświetlaczu LCD. Ta pozycja zostaje zapamiętana jako pozycja z indeksem \emph{0}. Wszystkie piny skonfigurowane jako wyjścia sygnału do modułu przekaźników ustawiane są w stan wysoki. Uruchomione zostaje oświetlenie sterowane z użyciem PWM oraz wyświetlone menu.
+\newline
+Kolejność, w jakiej karetka będzie podjeżdżać pod dyspensery z napojami jest zdwefiniowana w tablicy i dla każdego napoju może być inna. W przypadku modelu prezentacyjnego przyjęto standardową kolejność od pozycji początkowej, przez pozycję z indeksem 5 (maksymalny indeks) i z powrotem na pozycję z indeksem 0.
+Przepis napoju -- mieszankę poszczególnych składników ustalany jest również w tablicy, do której wpisane są ilości tików zegara inkrementującego zmienną odpowiedzialną za pracę pomp.
+\newline
+Zmiana wyświetlanego na ekranie napisu zależy od aktualnej wartości zmiennych, które są inkrementowane bądź dekrementowane w przerwaniach pochodzących z pinów. do których podłączone są przyciski do obsługi menu.
+\newline
+Odtwarzacz muzzyki pozwala na odtwarzanie dźwięków -- plików z rozszerzeniem .wav wgranych do pamięci typu flash. 
+
  
 %Sekcję tą można podzielić na dodatkowe podsekcje w miarę potrzeb. 
 %Do tego celu nalezy wykorzystać \textit{subsection}.
@@ -601,11 +611,14 @@ Jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisk
 
 %Obecne we wszystkich dokumentach
 \newpage
+\section{Zadania niezrealizowane}
+Z powodu napotkanych problemów logistycznych spowodowanych aktualną sytuacją, zakup pomp do pompowania płynów zakończył się niepowodzeniem. Mimo to, zaimplementowano ich obsługę, wizualizacja działania jest widoczna na diodach LED zamontowanych na module przekaźników. Urządzenie jest w pełni przygotowane do pracy i wymaga jedynie podłączenia pomp do modułu przekaźników.
+
 \section{Podsumowanie}
 
 Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Uzupełełniono program o pozostałe funkcjonalności.
 Projekt został wykonany zgodnie z założeniami. Wprowadzono drobne zmiany, które poprawiły komfort korzystania z urządzenia. 
-Z powodu napotkanych problemów logistycznych spowodowanych aktualną sytuacją, zakup pomp do pompowania płynów zakończył się niepowodzeniem. Mimo to, zaimplementowano ich obsługę, wizualizacja działania jest widoczna na diodach LED zamontowanych na module przekaźników.
+
 
 
 \newpage
