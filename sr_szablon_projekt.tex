@@ -382,11 +382,20 @@ Silnik krokowy NEMA 17 połączony jest za pomocą taśmy zakończonej złączam
 \subsection{Sekcja przekaźników}
 Moduł przekaźników podłączony jest do mikrokontrolera taśmą goldpin. Zasilany jest napięciem 5V z przetwornicy. Zastosowana izolacja galwaniczna zabezpiecza mikrokontroler przed nieporządanymi pikami napięcia podczas rozłączania cewek, dodatkowo powoduje zmniejszenie prądu pobieranego z pinów mikrokontrolera.
 
+\subsection{Sekcja audio}
+Celem wzmocnienia sygnału audio z układu DAC użyto modułu ze wzmacniaczem PAM8403 pracującym w klasie D. Użyto dwóch głośników o impedancji 4 omów o mocy 3W.
+
 \subsection{Wyświetlacz LCD oraz konwerter I2C}
 Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -- PCF8574. Moduł podłączony jest z mikroprocesorem za pomocą czterech przewodów zakończonych goldpinami. Dwa z nich odpowiadają za obługę magistrali I2C (SDA oraz SCL) kolejne dwa to masa oraz zasilanie 5V
 
-\subsection{Sekcja audio}
-Celem wzmocnienia sygnału audio z układu DAC użyto modułu ze wzmacniaczem PAM8403 pracującym w klasie D. Użyto głośników o impedancji 4 omów o mocy 3W.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{lcd.jpg}
+	\caption{Wyświetlacz LCD oraz przyciski sterujące}
+	\label{fig:LCD}
+\end{figure}
+
+
 
 \subsection{Podświetlenie}
 Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
@@ -398,7 +407,7 @@ Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby um
 	\label{fig:LED}
 \end{figure}
 
-\includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{dionizos_eagleA32.pdf}
+\includepdf[pages=-,pagecommand={},width=\textwidth,angle=90]{ajubadi2schemat.pdf}
 
 
 %Obecne w dokumencie do etapu II oraz III
@@ -418,7 +427,13 @@ W drukarce do poruszania karetką wykorzystany był silnik prądu stałego, któ
 Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
 
 
-
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{sterownik.jpg}
+	\caption{Wygląd całego urządzenia}
+	\label{fig:Barman}
+\end{figure}
+\newpage
 
 
 %Obecne w dokumencie do etapu II oraz III
