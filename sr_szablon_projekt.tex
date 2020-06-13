@@ -46,6 +46,7 @@
 \usepackage{pdfpages}
 \usepackage{url}
 
+
 \include{preambula}
 
 \begin{document}
@@ -468,8 +469,8 @@ Wykorzystany moduł wyświetlacza LCD HD44780 wyposażony jest w konwerter I2C -
 	\label{fig:LCD}
 \end{figure}
 
-\subsection{Podświetlenie}
-Jako elementy wykonawcze użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie nimi, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
+\subsection{Podświetlenie LED}
+Jako elementy sterujące użyto tranzystory MOSFET IRFP540N z kanałem N. Aby umożliwić sterowanie mikrokontrolerem, użyto konwertera stanów logicznych 3.3V -> 5V. Do podświetlenia wykorzystano taśmę LED RGB z diodami 5050.
 
 \begin{figure}[H]
 	\centering
@@ -490,7 +491,7 @@ Część sprzętowa została podzielona na trzy moduły
     
     \item Sekcja GUI tworzona jest przez moduł wyświetlacza LCD, konwertera I2C oraz przycisków.
     
-    \item Moduł przekaźników stanowi oddzielny element konstrukcji
+    \item Moduł przekaźników stanowiący oddzielny element konstrukcji.
 \end{itemize}
 
 
@@ -501,10 +502,10 @@ Część sprzętowa została podzielona na trzy moduły
 	\label{fig:Sterownik}
 \end{figure}
 
-Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania uzyskiwane są z przetwornic DC-DC step down.
+Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu stałego i mostek prostowniczy. Zastosowano również odpowiednią filtrację napięcia. Poszczególne napięcia zasilania (5V, 12V) uzyskiwane są z przetwornic DC-DC step down, a napięcie 3V ze stabilizatora liniowego umieszczonego na płytce deweloperskiej.
 
 \begin{itemize}
-    \item Zasilane bezpośrednio z zasilacza
+    \item Zasilane bezpośrednio z zasilacza (17V)
     \subitem -- DRV8825 -- sterownik silnika krokowego
     \subitem -- przetwornica DC-DC step-down 12V
     \subitem -- przetwornica DC-DC step-down 5V
@@ -514,14 +515,14 @@ Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu
     \subitem -- moduł przekaźników
     \subitem -- wyświetlacz LCD
     \subitem -- wzmacniacz PAM8403
-    \subitem -- część modułu konwertera stanów logicznych
+    \subitem -- część HV modułu konwertera stanów logicznych
     
     \item Zasilane z przetwornicy 12V
     \subitem -- taśma LED RGB (tranzystory MOSFET)
     
     \item Zasilane ze stabilizatora 3V
     \subitem -- przyciski MENU oraz wyłącznik krańcowy
-    \subitem -- część modułu konwertera stanów logicznych
+    \subitem -- część LV modułu konwertera stanów logicznych
 \end{itemize}
 
 
@@ -533,7 +534,7 @@ Sekcja zasilania została zbudowana w oparciu o zasilacz transformatorowy prądu
 \section{Konstrukcja mechaniczna}
 
 \subsection{Konstrukcja}
-Jako podstawę do stworzenia urządzenia wykorzystano część mechaniki z drukarki HP C1440. Usunięto zbędne elementy wyposażenia, pozostawiono między innymi wałek, karetkę, Celem poprawienia estetyki projektu zmodyfikowano część podstawy przez montaż profili alumuniowych. W górnej części barmana umieszczona została aluminiowa listwa, pod którą przyklejona została taśma LED. Na niej w przyszłości również zostaną zamontowane wężyki prowadzące z pomp. 
+Jako podstawę do stworzenia urządzenia wykorzystano część mechaniki z drukarki HP C1220C. Usunięto zbędne elementy wyposażenia, pozostawiono między innymi wałek, karetkę, Celem poprawienia estetyki projektu zmodyfikowano część podstawy przez montaż profili alumuniowych. W górnej części barmana umieszczona została aluminiowa listwa, pod którą przyklejona została taśma LED. Na niej w przyszłości również zostaną zamontowane wężyki prowadzące z pomp. 
 Na jednym z profili umieszczono wyświetlacz LCD oraz przyciski sterujące. Na jego przedłużeniu znajduje się również sterownik całego urządzenia.
 
 Jako podstawę użyto płyty laminowanej, którą wyposażono w gumowe nóżki. 
@@ -548,7 +549,7 @@ Odcięto zbędne elementy plastikowe utrzymujące ruchome element.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{barman.jpg}
+	\includegraphics[width=0.6\textwidth]{barman.jpg}
 	\caption{Wygląd całego urządzenia}
 	\label{fig:Barman}
 \end{figure}
@@ -562,22 +563,26 @@ Zaimplementowano obsługę silnika krokowego oraz wyłącznika krańcowego.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.35\textwidth]{algorytm2.png}
+	\includegraphics[width=0.3\textwidth]{algorytm2.png}
 	\caption{Diagram algorytmu sterowania silnikiem}
 	\label{fig:Diagram}
 \end{figure}
 
  
 Dzięki zastosowanym mechanizmom flag i zmiennych ulotnych oraz użyciu liczników jednocześnie wykonywane są poszczególne elementy programu - obsługa przycisków i menu, odtwarzanie muzyki, obsługa silnika i przekaźników pomp oraz generowanie przebiegu PWM. 
-\newline
+
+\bigskip
 Na początku programu zainicjalizowane są wszystkie peryferia, następuje proces kalibracji karetki, która po dojechaniu do wyłącznika krańcowego zostaje zatrzymana. Podczas kalibracji wyświetlana jest stosowna informacja na wyświetlaczu LCD. Ta pozycja zostaje zapamiętana jako pozycja z indeksem \emph{0}. Wszystkie piny skonfigurowane jako wyjścia sygnału do modułu przekaźników ustawiane są w stan wysoki. Uruchomione zostaje oświetlenie sterowane z użyciem PWM oraz wyświetlone menu.
-\newline
-Kolejność, w jakiej karetka będzie podjeżdżać pod dyspensery z napojami jest zdwefiniowana w tablicy i dla każdego napoju może być inna. W przypadku modelu prezentacyjnego przyjęto standardową kolejność od pozycji początkowej, przez pozycję z indeksem 5 (maksymalny indeks) i z powrotem na pozycję z indeksem 0.
-Przepis napoju -- mieszankę poszczególnych składników ustalany jest również w tablicy, do której wpisane są ilości tików zegara inkrementującego zmienną odpowiedzialną za pracę pomp.
-\newline
+
+\bigskip
+Kolejność, w jakiej karetka będzie podjeżdżać pod dyspensery z napojami jest zdwefiniowana w tablicy i dla każdego napoju może być inna. W przypadku modelu prezentacyjnego przyjęto standardową kolejność od pozycji początkowej, przez pozycję z indeksem 5 (maksymalny indeks) i z powrotem na pozycję z indeksem \emph{0}.
+Przepis napoju -- mieszankę poszczególnych składników -- ustalany jest również w tablicy, do której wpisane są ilości tików zegara inkrementującego zmienną odpowiedzialną za pracę pomp.
+
+\bigskip
 Zmiana wyświetlanego na ekranie napisu zależy od aktualnej wartości zmiennych, które są inkrementowane bądź dekrementowane w przerwaniach pochodzących z pinów. do których podłączone są przyciski do obsługi menu.
-\newline
-Odtwarzacz muzzyki pozwala na odtwarzanie dźwięków -- plików z rozszerzeniem .wav wgranych do pamięci typu flash. 
+
+\bigskip
+Odtwarzacz muzyki pozwala na odtwarzanie dźwięków -- plików z rozszerzeniem .wav wgranych do pamięci typu flash. 
 
  
 %Sekcję tą można podzielić na dodatkowe podsekcje w miarę potrzeb. 
@@ -619,24 +624,26 @@ Z powodu napotkanych problemów logistycznych spowodowanych aktualną sytuacją,
 Dokonano zmian w konfiguracji mikrokontrolera celem dopasowania rozmieszczenia pinów i uproszczenia połączeń na płytce uniwersalnej. Uzupełełniono program o pozostałe funkcjonalności.
 Projekt został wykonany zgodnie z założeniami. Wprowadzono drobne zmiany, które poprawiły komfort korzystania z urządzenia. 
 
+\bigskip
 
 
-\newpage
+Linki do repozytoriów na platformie Github -- 2 etap:
 \newline
-\newline
-Linki do repozytoriów na platformie Github 2 etap:
-\newline
-\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_2}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_2 - Github]}
+\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_2}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_2 -- Github]}
 \newline
 \href{https://github.com/kewingaluszka/STM32_AuBaDi}{[Projekt STM32CubeIDE -- Github]}
 
-Linki do repozytoriów na platformie Github 3 etap:
+\bigskip
+Linki do repozytoriów na platformie Github -- 3 etap:
 \newline
-\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_3}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_3 - Github]}
+\href{https://github.com/kewingaluszka/SteRoP_2020_AuBaDi_KGAU_3}{[Raport SteRoP\_2020\_AuBaDi\_KGAU\_3 -- Github]}
 \newline
 \href{https://github.com/kewingaluszka/AuBaDi}{[Projekt STM32CubeIDE -- Github]}
+
+\bigskip
+Link do prezentacji urządzenia  -- YouTube:
 \newline
-\href{www.youtube.com/watch?v=tgUb9r82Xmk}{[]Prezentacja - film]}
+\href{https://www.youtube.com/watch?v=tgUb9r82Xmk}{[Prezentacja - film]}
 
 \newpage
 %\addcontentsline{toc}{section}{Bibilografia}
@@ -666,7 +673,10 @@ Linki do repozytoriów na platformie Github 3 etap:
     Nota aplikacyjna \emph{Audio playback and recording},
     \url{https://www.st.com/resource/en/application_note/dm00040802-audio-playback-and-recording-using-the-stm32f4discovery-stmicroelectronics.pdf}, 2011
 \bibitem{8 Channel 5V Optical Isolated Relay Module}
-    Instrukcja obsługi modułu przekaźników, \url{http://www.handsontec.com/dataspecs/module/8Ch-relay.pdf}
+   Instrukcja obsługi modułu przekaźników, \url{http://www.handsontec.com/dataspecs/module/8Ch-relay.pdf}
+    \bibitem{8 Channel 5V Optical }
+    MYaqoobEmbedded, \emph{STM32 HAL with CubeMX}  \url{ https://www.youtube.com/channel/UC-CuJ6qKst9-8Z-EXjoYK3Q}
+   
 \end{thebibliography}
 \end{document}
 
